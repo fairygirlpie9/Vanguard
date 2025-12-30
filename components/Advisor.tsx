@@ -12,6 +12,7 @@ const Advisor: React.FC = () => {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [lastReasoning, setLastReasoning] = useState<string | null>(null);
   const chatSession = useRef<Chat | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -30,6 +31,7 @@ const Advisor: React.FC = () => {
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setIsTyping(true);
+    setLastReasoning(null);
 
     const startTime = performance.now();
 
@@ -46,30 +48,77 @@ const Advisor: React.FC = () => {
          const c = chunk as GenerateContentResponse;
          const text = c.text;
          
-         // Capture Token Usage if available in chunks
          if (c.usageMetadata?.totalTokenCount) {
              totalTokens = c.usageMetadata.totalTokenCount;
          }
 
          if (text) {
              fullText += text;
+             
+             // Real-time parsing of the reasoning block to hide it from main chat but store it
+             let displayText = fullText;
+             const reasoningMatch = fullText.match(/\[TACTICAL_ASSESSMENT\]([\s\S]*?)\[END_ASSESSMENT\]/);
+             
+             if (reasoningMatch) {
+                 setLastReasoning(reasoningMatch[1].trim());
+                 displayText = fullText.replace(/\[TACTICAL_ASSESSMENT\][\s\S]*?\[END_ASSESSMENT\]/, '').trim();
+             }
+
              setMessages(prev => prev.map(msg => 
-                msg.timestamp === timestamp ? { ...msg, text: fullText } : msg
+                msg.timestamp === timestamp ? { ...msg, text: displayText } : msg
              ));
          }
       }
 
-      // Send Metrics after stream completes
       const duration = performance.now() - startTime;
+      
+      // --- DATADOG REPORTING ---
+      
+      // 1. Send Metrics
       sendMetric('vanguard.gemini.response_time_ms', duration, ['type:chat']);
       if (totalTokens > 0) {
         sendMetric('vanguard.gemini.tokens_used', totalTokens, ['type:chat']);
       }
 
+      // 2. Send Reasoning Event (The "Visible" part)
+      if (lastReasoning) {
+          // This puts the reasoning text directly onto the Datadog Dashboard
+          sendEvent('AI Reasoning Log', lastReasoning, 'info');
+      } else {
+          // Fallback if regex didn't catch (e.g. streaming split) - parse final text
+          const finalMatch = fullText.match(/\[TACTICAL_ASSESSMENT\]([\s\S]*?)\[END_ASSESSMENT\]/);
+          if (finalMatch) {
+              const reasoning = finalMatch[1].trim();
+              setLastReasoning(reasoning);
+              sendEvent('AI Reasoning Log', reasoning, 'info');
+          }
+      }
+
+      // 3. HACKATHON CRITERIA: "Actionable Item with Context for AI Engineer"
+      // Rule: If latency is > 5s OR text contains "uncertain", trigger an Engineering Alert
+      if (duration > 5000 || fullText.toLowerCase().includes("i am not sure")) {
+          const contextPayload = `
+**INCIDENT CONTEXT FOR AI OPS:**
+- **Model:** gemini-2.5-flash
+- **Latency:** ${duration.toFixed(0)}ms (Threshold: 5000ms)
+- **Token Usage:** ${totalTokens}
+- **User Query:** "${userMsg.text}"
+- **Trigger:** ${duration > 5000 ? 'High Latency' : 'Model Uncertainty'}
+
+**ACTION REQUIRED:**
+- Investigate model performance degradation.
+- Review prompt complexity in 'services/geminiService.ts'.
+          `;
+          
+          sendEvent('AI Performance Degradation', contextPayload, 'warning');
+      }
+
     } catch (error) {
       setMessages(prev => [...prev, { role: 'model', text: '>> SYSTEM ERROR: UPLINK LOST.', isError: true, timestamp: Date.now() }]);
       sendMetric('vanguard.gemini.errors', 1, ['type:chat']);
-      sendEvent('Gemini Chat Error', 'Failed to stream response from Advisor AI.', 'error');
+      
+      // Incident Event for Engineer
+      sendEvent('AI System Failure', `Exception in Advisor Component.\nContext: Chat Stream interrupted.\nError: ${error}`, 'error');
     } finally {
       setIsTyping(false);
     }
@@ -135,6 +184,19 @@ const Advisor: React.FC = () => {
         ))}
         <div ref={messagesEndRef} />
       </div>
+
+      {/* TACTICAL REASONING DISPLAY PANEL (Visual Confirmation of what is sent to Datadog) */}
+      {lastReasoning && !isTyping && (
+          <div className="mx-4 mb-2 border border-tech-secondary/50 bg-black/60 p-3 animate-fade-in">
+              <div className="flex justify-between items-center mb-1">
+                  <h3 className="text-[10px] font-bold text-tech-secondary uppercase tracking-widest">Tactical Insight (Logged to HQ)</h3>
+                  <span className="text-[9px] text-gray-500">EVENT_ID: {Date.now().toString().substring(8)}</span>
+              </div>
+              <p className="text-xs text-gray-400 font-mono italic leading-tight">
+                  "{lastReasoning}"
+              </p>
+          </div>
+      )}
 
       <div className="p-4 border-t border-tech-border bg-tech-panel">
         <div className="flex space-x-2 relative">

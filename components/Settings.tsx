@@ -8,6 +8,7 @@ const Settings: React.FC = () => {
   const [site, setSite] = useState('datadoghq.eu');
   const [status, setStatus] = useState<'IDLE' | 'TESTING' | 'SUCCESS' | 'FAILURE'>('IDLE');
   const [logs, setLogs] = useState<TelemetryLog[]>([]);
+  const [showGuide, setShowGuide] = useState(false);
   const logsEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -54,13 +55,38 @@ const Settings: React.FC = () => {
       <div className="bg-tech-panel p-8 border border-tech-border w-full relative overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.5)]">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-tech-primary to-transparent opacity-50"></div>
         
-        <div className="flex items-center space-x-3 mb-8 border-b border-tech-border pb-4">
-            <span className="text-3xl">⚙</span>
-            <div>
-                <h2 className="text-2xl font-bold text-tech-primary uppercase tracking-[0.2em] crt-glow">Network Config</h2>
-                <p className="text-xs text-gray-500 font-mono">DATADOG TELEMETRY UPLINK</p>
+        <div className="flex items-center justify-between mb-8 border-b border-tech-border pb-4">
+            <div className="flex items-center space-x-3">
+                <span className="text-3xl">⚙</span>
+                <div>
+                    <h2 className="text-2xl font-bold text-tech-primary uppercase tracking-[0.2em] crt-glow">Network Config</h2>
+                    <p className="text-xs text-gray-500 font-mono">DATADOG TELEMETRY UPLINK</p>
+                </div>
             </div>
+            <button 
+                onClick={() => setShowGuide(!showGuide)}
+                className="text-xs border border-tech-secondary text-tech-secondary px-3 py-1 hover:bg-tech-secondary hover:text-black transition-colors uppercase"
+            >
+                {showGuide ? 'Hide Guide' : 'Dashboard Guide'}
+            </button>
         </div>
+
+        {/* DASHBOARD GUIDE PANEL */}
+        {showGuide && (
+            <div className="bg-black/80 border border-tech-secondary p-4 mb-6 animate-fade-in">
+                <h3 className="text-tech-secondary font-bold uppercase tracking-widest text-sm mb-2">Datadog Dashboard Setup</h3>
+                <ol className="list-decimal list-inside text-xs text-gray-300 space-y-2 font-mono">
+                    <li>Log in to your Datadog Dashboard.</li>
+                    <li>Click <strong>"Add Widget"</strong>.</li>
+                    <li>Search for the <strong>"List Stream"</strong> widget.</li>
+                    <li>Drag it onto your board.</li>
+                    <li>In the widget editor, find the <strong>Source</strong> dropdown (defaults to "Logs").</li>
+                    <li>Change Source to <strong>"Events"</strong>.</li>
+                    <li>Set the query to: <code className="text-tech-primary">app:vanguard</code></li>
+                    <li>Under <strong>Columns</strong>, ensure "Body" or "Message" is selected to see the AI reasoning.</li>
+                </ol>
+            </div>
+        )}
 
         <div className="space-y-6">
             <div className="flex justify-end">
