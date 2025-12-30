@@ -1,0 +1,7 @@
+{
+  "name": "Vanguard Preparedness",
+  "description": "A comprehensive preparedness dashboard for preppers, featuring inventory management, resource libraries, and an AI-powered emergency advisor with location intelligence.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
