@@ -13,11 +13,19 @@ const Advisor: React.FC = () => {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [lastReasoning, setLastReasoning] = useState<string | null>(null);
+  const [connectionError, setConnectionError] = useState<string | null>(null);
   const chatSession = useRef<Chat | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    chatSession.current = createAdvisorChat();
+    try {
+        chatSession.current = createAdvisorChat();
+        setConnectionError(null);
+    } catch (e: any) {
+        console.error("Failed to initialize Chat:", e);
+        setConnectionError("UPLINK OFFLINE: CHECK API CONFIGURATION");
+        setMessages(prev => [...prev, { role: 'model', text: '>> SYSTEM FAILURE: UNABLE TO INITIALIZE NEURAL LINK.', isError: true, timestamp: Date.now() }]);
+    }
   }, []);
 
   useEffect(() => {
@@ -25,6 +33,17 @@ const Advisor: React.FC = () => {
   }, [messages]);
 
   const handleSend = async () => {
+    // Retry initialization if it failed previously
+    if (!chatSession.current) {
+        try {
+            chatSession.current = createAdvisorChat();
+            setConnectionError(null);
+        } catch(e) {
+            setConnectionError("UPLINK FAILED");
+            return;
+        }
+    }
+
     if (!input.trim() || !chatSession.current) return;
 
     const userMsg: ChatMessage = { role: 'user', text: input, timestamp: Date.now() };
@@ -137,14 +156,14 @@ const Advisor: React.FC = () => {
       
       <div className="p-4 border-b border-tech-border bg-tech-panel/50 flex justify-between items-center backdrop-blur-sm">
         <div className="flex items-center space-x-3">
-           <div className="w-2 h-2 bg-tech-primary rounded-full animate-pulse"></div>
+           <div className={`w-2 h-2 rounded-full animate-pulse ${connectionError ? 'bg-tech-alert' : 'bg-tech-primary'}`}></div>
            <div>
               <h2 className="text-sm font-bold text-tech-primary uppercase tracking-[0.2em] crt-glow">Command Uplink</h2>
-              <p className="text-[10px] text-gray-500 font-mono">SECURE CHANNEL // ENCRYPTION: AES-256</p>
+              <p className="text-xs text-gray-500 font-mono">SECURE CHANNEL // ENCRYPTION: AES-256</p>
            </div>
         </div>
         <div className="text-tech-secondary text-xs font-mono">
-            {isTyping ? 'RECEIVING DATA...' : 'IDLE'}
+            {connectionError ? 'LINK SEVERED' : isTyping ? 'RECEIVING DATA...' : 'IDLE'}
         </div>
       </div>
 
@@ -157,13 +176,13 @@ const Advisor: React.FC = () => {
                 : 'bg-black border-tech-primary/30 text-tech-primary shadow-[0_0_10px_rgba(0,255,65,0.05)]'
             }`}>
               {msg.role === 'model' && (
-                <div className="text-[10px] font-bold text-tech-primary mb-2 uppercase tracking-widest border-b border-tech-primary/20 pb-1 flex justify-between">
+                <div className="text-xs font-bold text-tech-primary mb-2 uppercase tracking-widest border-b border-tech-primary/20 pb-1 flex justify-between">
                    <span>VANGUARD AI</span>
                    <span>T-{msg.timestamp}</span>
                 </div>
               )}
               {msg.role === 'user' && (
-                 <div className="text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-widest border-b border-gray-700 pb-1 text-right">
+                 <div className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest border-b border-gray-700 pb-1 text-right">
                     OPERATOR
                  </div>
               )}
@@ -182,6 +201,11 @@ const Advisor: React.FC = () => {
             </div>
           </div>
         ))}
+        {connectionError && (
+            <div className="text-center p-2 bg-tech-alert/10 border border-tech-alert/30 text-tech-alert text-xs font-mono uppercase tracking-widest">
+                ⚠ {connectionError}
+            </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
 
@@ -189,8 +213,8 @@ const Advisor: React.FC = () => {
       {lastReasoning && !isTyping && (
           <div className="mx-4 mb-2 border border-tech-secondary/50 bg-black/60 p-3 animate-fade-in">
               <div className="flex justify-between items-center mb-1">
-                  <h3 className="text-[10px] font-bold text-tech-secondary uppercase tracking-widest">Tactical Insight (Logged to HQ)</h3>
-                  <span className="text-[9px] text-gray-500">EVENT_ID: {Date.now().toString().substring(8)}</span>
+                  <h3 className="text-xs font-bold text-tech-secondary uppercase tracking-widest">Tactical Insight (Logged to HQ)</h3>
+                  <span className="text-xs text-gray-500">EVENT_ID: {Date.now().toString().substring(8)}</span>
               </div>
               <p className="text-xs text-gray-400 font-mono italic leading-tight">
                   "{lastReasoning}"
@@ -206,15 +230,15 @@ const Advisor: React.FC = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            disabled={isTyping}
-            placeholder="ENTER COMMAND OR QUERY..."
+            disabled={isTyping || !!connectionError}
+            placeholder={connectionError ? "CONNECTION LOST" : "ENTER COMMAND OR QUERY..."}
             className="flex-1 bg-black border border-tech-border p-3 pl-8 text-white focus:border-tech-primary outline-none font-mono text-sm placeholder-gray-700 uppercase"
             autoFocus
           />
           <button
             onClick={handleSend}
-            disabled={isTyping || !input.trim()}
-            className="bg-tech-border text-tech-primary border border-tech-primary font-bold px-6 py-2 hover:bg-tech-primary hover:text-black uppercase tracking-wider transition-all disabled:opacity-50"
+            disabled={isTyping || !input.trim() || !!connectionError}
+            className="bg-tech-border text-tech-primary border border-tech-primary font-bold px-6 py-2 hover:bg-tech-primary hover:text-black active:bg-tech-primary active:text-black uppercase tracking-wider transition-all disabled:opacity-50 active:scale-95"
           >
             TX
           </button>

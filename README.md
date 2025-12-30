@@ -1,6 +1,6 @@
-Vanguard Preparedness App by D Royer.
-
-This project runs partly in AI Studio and connects to Datadog to run it in AI Studio follow the instructions below. You can watch the demo here: https://vimeo.com/1150446871?fl=ip&fe=ec
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
 
 # Run and deploy your AI Studio app
 

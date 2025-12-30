@@ -95,30 +95,30 @@ const Inventory: React.FC<InventoryProps> = ({ items, setItems, crew, setCrew })
             <h2 className="text-sm font-bold text-tech-primary uppercase tracking-[0.2em] mb-4">Personnel Manifest</h2>
             <div className="flex space-x-4">
                 <div className="flex flex-col">
-                    <label className="text-[10px] text-gray-500 uppercase">Adults</label>
+                    <label className="text-xs text-gray-500 uppercase">Adults</label>
                     <input 
                       type="number" min="1" 
                       value={crew.adults} 
                       onChange={(e) => setCrew(prev => ({...prev, adults: parseInt(e.target.value) || 0}))}
-                      className="w-16 bg-black border border-tech-border text-center text-white p-1"
+                      className="w-16 bg-black border border-tech-border text-center text-white p-2 text-sm"
                     />
                 </div>
                 <div className="flex flex-col">
-                    <label className="text-[10px] text-gray-500 uppercase">Minors</label>
+                    <label className="text-xs text-gray-500 uppercase">Minors</label>
                     <input 
                       type="number" min="0" 
                       value={crew.children} 
                       onChange={(e) => setCrew(prev => ({...prev, children: parseInt(e.target.value) || 0}))}
-                      className="w-16 bg-black border border-tech-border text-center text-white p-1"
+                      className="w-16 bg-black border border-tech-border text-center text-white p-2 text-sm"
                     />
                 </div>
                  <div className="flex flex-col">
-                    <label className="text-[10px] text-gray-500 uppercase">Pets</label>
+                    <label className="text-xs text-gray-500 uppercase">Pets</label>
                     <input 
                       type="number" min="0" 
                       value={crew.pets} 
                       onChange={(e) => setCrew(prev => ({...prev, pets: parseInt(e.target.value) || 0}))}
-                      className="w-16 bg-black border border-tech-border text-center text-white p-1"
+                      className="w-16 bg-black border border-tech-border text-center text-white p-2 text-sm"
                     />
                 </div>
             </div>
@@ -126,18 +126,18 @@ const Inventory: React.FC<InventoryProps> = ({ items, setItems, crew, setCrew })
         
         <div className="flex items-center justify-around border-l border-tech-border pl-4">
              <div className="text-center">
-                 <div className="text-[10px] text-gray-500 uppercase mb-1">Water Sustainability</div>
+                 <div className="text-xs text-gray-500 uppercase mb-1">Water Sustainability</div>
                  <div className={`text-2xl font-mono font-bold ${waterDays < 3 ? 'text-tech-alert animate-pulse' : 'text-tech-primary'}`}>
                     {waterDays.toFixed(1)} <span className="text-xs">DAYS</span>
                  </div>
-                 <div className="text-[9px] text-gray-600">{dailyWaterReq.toFixed(1)} L / DAY REQ</div>
+                 <div className="text-xs text-gray-600">{dailyWaterReq.toFixed(1)} L / DAY REQ</div>
              </div>
              <div className="text-center">
-                 <div className="text-[10px] text-gray-500 uppercase mb-1">Ration Sustainability</div>
+                 <div className="text-xs text-gray-500 uppercase mb-1">Ration Sustainability</div>
                  <div className={`text-2xl font-mono font-bold ${foodDays < 3 ? 'text-tech-alert animate-pulse' : 'text-tech-secondary'}`}>
                     {foodDays.toFixed(1)} <span className="text-xs">DAYS</span>
                  </div>
-                 <div className="text-[9px] text-gray-600">{dailyCalReq} CAL / DAY REQ</div>
+                 <div className="text-xs text-gray-600">{dailyCalReq} CAL / DAY REQ</div>
              </div>
         </div>
       </div>
@@ -153,7 +153,7 @@ const Inventory: React.FC<InventoryProps> = ({ items, setItems, crew, setCrew })
                 type="text"
                 value={newItemName}
                 onChange={(e) => setNewItemName(e.target.value)}
-                className="w-full bg-black border border-tech-border p-2 text-tech-primary focus:border-tech-primary outline-none font-mono"
+                className="w-full bg-black border border-tech-border p-3 text-tech-primary focus:border-tech-primary outline-none font-mono text-sm"
                 placeholder="TYPE DESIGNATION..."
               />
             </div>
@@ -163,7 +163,7 @@ const Inventory: React.FC<InventoryProps> = ({ items, setItems, crew, setCrew })
                 <select
                     value={newItemCategory}
                     onChange={(e) => setNewItemCategory(e.target.value as any)}
-                    className="w-full bg-black border border-tech-border p-2 text-tech-primary outline-none font-mono uppercase"
+                    className="w-full bg-black border border-tech-border p-3 text-tech-primary outline-none font-mono uppercase text-sm"
                 >
                     {categories.map(c => <option key={c} value={c}>{c.toUpperCase()}</option>)}
                 </select>
@@ -176,7 +176,7 @@ const Inventory: React.FC<InventoryProps> = ({ items, setItems, crew, setCrew })
                             type="number"
                             value={newItemCalories}
                             onChange={(e) => setNewItemCalories(parseInt(e.target.value) || 0)}
-                            className="w-full bg-black border border-tech-border p-2 text-white outline-none font-mono"
+                            className="w-full bg-black border border-tech-border p-3 text-white outline-none font-mono text-sm"
                             placeholder="Cal"
                         />
                     </div>
@@ -188,7 +188,7 @@ const Inventory: React.FC<InventoryProps> = ({ items, setItems, crew, setCrew })
                             type="number"
                             value={newItemDose}
                             onChange={(e) => setNewItemDose(parseInt(e.target.value) || 0)}
-                            className="w-full bg-black border border-tech-border p-2 text-white outline-none font-mono"
+                            className="w-full bg-black border border-tech-border p-3 text-white outline-none font-mono text-sm"
                         />
                     </div>
                 )}
@@ -196,7 +196,7 @@ const Inventory: React.FC<InventoryProps> = ({ items, setItems, crew, setCrew })
             
             <button
               onClick={handleAddItem}
-              className="w-full bg-tech-border hover:bg-tech-primary hover:text-black text-tech-primary font-bold py-2 border border-tech-primary transition-all uppercase tracking-widest text-sm"
+              className="w-full bg-tech-border hover:bg-tech-primary hover:text-black active:bg-tech-primary active:text-black text-tech-primary font-bold py-3 border border-tech-primary transition-all uppercase tracking-widest text-sm active:scale-95"
             >
               Add to Manifest
             </button>
@@ -209,8 +209,8 @@ const Inventory: React.FC<InventoryProps> = ({ items, setItems, crew, setCrew })
           <div className="h-48 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
-                <XAxis dataKey="name" stroke="#666" fontSize={10} tickLine={false} axisLine={false} tick={{fill: '#666', fontFamily: 'Share Tech Mono'}} />
-                <YAxis stroke="#666" fontSize={10} tickLine={false} axisLine={false} unit="%" tick={{fill: '#666', fontFamily: 'Share Tech Mono'}} />
+                <XAxis dataKey="name" stroke="#666" fontSize={12} tickLine={false} axisLine={false} tick={{fill: '#666', fontFamily: 'Share Tech Mono'}} />
+                <YAxis stroke="#666" fontSize={12} tickLine={false} axisLine={false} unit="%" tick={{fill: '#666', fontFamily: 'Share Tech Mono'}} />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#000', borderColor: '#333', color: '#00ff41', fontFamily: 'Share Tech Mono' }}
                   cursor={{fill: 'rgba(0, 255, 65, 0.05)'}}
@@ -233,7 +233,7 @@ const Inventory: React.FC<InventoryProps> = ({ items, setItems, crew, setCrew })
           <span className="text-xs font-mono text-tech-primary px-2 py-1 border border-tech-primary/30">COUNT: {items.length}</span>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left border-collapse min-w-[600px]">
             <thead className="bg-black/50 text-xs uppercase text-gray-500 font-mono tracking-wider">
               <tr>
                 <th className="p-4 border-b border-tech-border">Item</th>
@@ -246,8 +246,8 @@ const Inventory: React.FC<InventoryProps> = ({ items, setItems, crew, setCrew })
               {items.map(item => (
                 <tr key={item.id} className="hover:bg-white/5 transition-colors group">
                   <td className="p-4 font-mono text-gray-300">
-                      <div className="font-bold">{item.name}</div>
-                      <div className="text-[10px] text-gray-500 uppercase tracking-wider">{item.category}</div>
+                      <div className="font-bold text-sm">{item.name}</div>
+                      <div className="text-xs text-gray-500 uppercase tracking-wider">{item.category}</div>
                   </td>
                   <td className="p-4">
                      {/* Category Specific Data Display */}
@@ -258,11 +258,11 @@ const Inventory: React.FC<InventoryProps> = ({ items, setItems, crew, setCrew })
                      )}
                      {item.category === 'Meds' && (
                          <div className="space-y-1">
-                             <div className="text-[10px] font-mono text-tech-alert">
+                             <div className="text-xs font-mono text-tech-alert">
                                 DOSE: {item.dailyDose}/day
                              </div>
                              {item.quantity < (item.dailyDose || 1) * 3 && (
-                                 <div className="text-[9px] bg-tech-alert text-black px-1 font-bold animate-pulse inline-block">REFILL REQ</div>
+                                 <div className="text-xs bg-tech-alert text-black px-1 font-bold animate-pulse inline-block">REFILL REQ</div>
                              )}
                          </div>
                      )}
@@ -272,7 +272,7 @@ const Inventory: React.FC<InventoryProps> = ({ items, setItems, crew, setCrew })
                        placeholder="EXP: YYYY-MM-DD"
                        value={item.expiry || ''}
                        onChange={(e) => updateItemDetails(item.id, { expiry: e.target.value })}
-                       className="bg-transparent border-b border-transparent group-hover:border-gray-700 text-[10px] text-gray-500 w-24 outline-none focus:border-tech-primary focus:text-tech-primary mt-1"
+                       className="bg-transparent border-b border-transparent group-hover:border-gray-700 text-xs text-gray-500 w-28 outline-none focus:border-tech-primary focus:text-tech-primary mt-1 p-1"
                      />
                   </td>
                   <td className="p-4">
@@ -280,7 +280,7 @@ const Inventory: React.FC<InventoryProps> = ({ items, setItems, crew, setCrew })
                        <span className="text-xs font-mono w-16 text-right text-gray-400">
                          {item.quantity}/{item.target}
                        </span>
-                       <div className="w-24 h-1 bg-gray-800">
+                       <div className="w-24 h-2 bg-gray-800">
                          <div 
                            className="h-full transition-all duration-500 shadow-[0_0_8px_rgba(0,0,0,0.5)]" 
                            style={{ 
@@ -292,21 +292,21 @@ const Inventory: React.FC<InventoryProps> = ({ items, setItems, crew, setCrew })
                        </div>
                     </div>
                   </td>
-                  <td className="p-4 text-right space-x-1">
+                  <td className="p-4 text-right space-x-2">
                     <button 
                       onClick={() => updateQuantity(item.id, -1)}
-                      className="w-8 h-8 bg-black hover:bg-tech-alert hover:text-black text-gray-400 border border-tech-border transition-colors font-mono"
+                      className="w-8 h-8 bg-black hover:bg-tech-alert hover:text-black active:bg-tech-alert active:text-black text-gray-400 border border-tech-border transition-colors font-mono font-bold"
                     >-</button>
                     <button 
                       onClick={() => updateQuantity(item.id, 1)}
-                      className="w-8 h-8 bg-black hover:bg-tech-primary hover:text-black text-gray-400 border border-tech-border transition-colors font-mono"
+                      className="w-8 h-8 bg-black hover:bg-tech-primary hover:text-black active:bg-tech-primary active:text-black text-gray-400 border border-tech-border transition-colors font-mono font-bold"
                     >+</button>
                   </td>
                 </tr>
               ))}
               {items.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="p-12 text-center text-gray-600 font-mono uppercase tracking-widest">
+                  <td colSpan={4} className="p-12 text-center text-gray-600 font-mono uppercase tracking-widest text-sm">
                     [ NO DATA IN MANIFEST ]
                   </td>
                 </tr>

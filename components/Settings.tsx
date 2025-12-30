@@ -51,11 +51,11 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 font-tech h-full flex flex-col max-w-4xl mx-auto pb-6">
+    <div className="space-y-6 font-tech flex flex-col max-w-4xl mx-auto pb-6">
       <div className="bg-tech-panel p-8 border border-tech-border w-full relative overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.5)]">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-tech-primary to-transparent opacity-50"></div>
         
-        <div className="flex items-center justify-between mb-8 border-b border-tech-border pb-4">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 border-b border-tech-border pb-4 gap-4">
             <div className="flex items-center space-x-3">
                 <span className="text-3xl">⚙</span>
                 <div>
@@ -65,7 +65,7 @@ const Settings: React.FC = () => {
             </div>
             <button 
                 onClick={() => setShowGuide(!showGuide)}
-                className="text-xs border border-tech-secondary text-tech-secondary px-3 py-1 hover:bg-tech-secondary hover:text-black transition-colors uppercase"
+                className="text-xs font-bold border border-tech-secondary text-tech-secondary px-4 py-2 hover:bg-tech-secondary hover:text-black active:bg-tech-secondary active:text-black transition-colors uppercase"
             >
                 {showGuide ? 'Hide Guide' : 'Dashboard Guide'}
             </button>
@@ -75,7 +75,7 @@ const Settings: React.FC = () => {
         {showGuide && (
             <div className="bg-black/80 border border-tech-secondary p-4 mb-6 animate-fade-in">
                 <h3 className="text-tech-secondary font-bold uppercase tracking-widest text-sm mb-2">Datadog Dashboard Setup</h3>
-                <ol className="list-decimal list-inside text-xs text-gray-300 space-y-2 font-mono">
+                <ol className="list-decimal list-inside text-xs md:text-sm text-gray-300 space-y-2 font-mono">
                     <li>Log in to your Datadog Dashboard.</li>
                     <li>Click <strong>"Add Widget"</strong>.</li>
                     <li>Search for the <strong>"List Stream"</strong> widget.</li>
@@ -90,7 +90,10 @@ const Settings: React.FC = () => {
 
         <div className="space-y-6">
             <div className="flex justify-end">
-                <button onClick={loadPreset} className="text-[10px] text-tech-secondary border border-tech-secondary px-2 py-1 uppercase hover:bg-tech-secondary hover:text-black transition-colors">
+                <button 
+                    onClick={loadPreset} 
+                    className="text-xs text-tech-secondary border border-tech-secondary px-3 py-2 uppercase hover:bg-tech-secondary hover:text-black active:bg-tech-secondary active:text-black transition-colors font-bold"
+                >
                     Load Hackathon Preset
                 </button>
             </div>
@@ -131,28 +134,28 @@ const Settings: React.FC = () => {
                 </select>
             </div>
 
-            <div className="pt-4 border-t border-tech-border flex items-center justify-between">
+            <div className="pt-4 border-t border-tech-border flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="text-xs font-mono">
                     {status === 'TESTING' && <span className="text-tech-warning animate-pulse">>> VERIFYING HANDSHAKE...</span>}
                     {status === 'SUCCESS' && <span className="text-tech-primary">>> CONNECTION ESTABLISHED</span>}
                     {status === 'FAILURE' && (
                         <div className="flex flex-col">
                             <span className="text-tech-alert">>> CONNECTION REFUSED</span>
-                            <span className="text-[9px] text-gray-500">CHECK KEYS OR CORS SETTINGS</span>
+                            <span className="text-[10px] text-gray-500">CHECK KEYS OR CORS SETTINGS</span>
                         </div>
                     )}
                 </div>
                 <button
                     onClick={handleSave}
                     disabled={!apiKey || !appKey || status === 'TESTING'}
-                    className="bg-tech-border text-tech-primary border border-tech-primary font-bold px-8 py-3 hover:bg-tech-primary hover:text-black uppercase tracking-widest transition-all disabled:opacity-50"
+                    className="w-full md:w-auto bg-tech-border text-tech-primary border border-tech-primary font-bold px-8 py-3 hover:bg-tech-primary hover:text-black active:bg-tech-primary active:text-black uppercase tracking-widest transition-all disabled:opacity-50 active:scale-95"
                 >
                     {status === 'TESTING' ? 'CONNECTING' : 'INITIALIZE UPLINK'}
                 </button>
             </div>
         </div>
 
-        <div className="mt-8 bg-black/50 p-4 border border-tech-border/50 text-[10px] text-gray-600 font-mono">
+        <div className="mt-8 bg-black/50 p-4 border border-tech-border/50 text-xs text-gray-600 font-mono">
             <p>NOTE: API Keys are stored locally in your browser. Connection is routed via secure CORS proxy for demo compatibility.</p>
         </div>
       </div>
@@ -163,10 +166,10 @@ const Settings: React.FC = () => {
             <h3 className="text-xs text-tech-primary font-bold uppercase tracking-widest">Live Telemetry Console</h3>
             <div className="flex items-center space-x-2">
                 <span className="w-2 h-2 bg-tech-alert rounded-full animate-pulse"></span>
-                <span className="text-[10px] text-gray-500">REAL-TIME TRAFFIC</span>
+                <span className="text-xs text-gray-500">REAL-TIME TRAFFIC</span>
             </div>
          </div>
-         <div className="flex-1 overflow-y-auto font-mono text-[10px] space-y-1 custom-scrollbar p-2 bg-black/50">
+         <div className="flex-1 overflow-y-auto font-mono text-xs space-y-1 custom-scrollbar p-2 bg-black/50">
              {logs.length === 0 && <div className="text-gray-700 italic">>> No traffic detected. Initialize Uplink or perform actions to generate telemetry.</div>}
              {logs.map((log) => (
                  <div key={log.id} className="flex space-x-2">

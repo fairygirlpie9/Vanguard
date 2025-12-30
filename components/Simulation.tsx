@@ -129,9 +129,11 @@ const SnakeGame: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKey);
   }, [dir]);
 
-  // Touch controls handlers
-  const handleTouchDir = (d: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT') => {
+  // Touch controls handlers - Preventing Default to stop scroll interference
+  const handleTouchDir = (d: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT', e?: React.MouseEvent | React.TouchEvent) => {
+      if (e) e.preventDefault();
       if (gameOver) return;
+      
       switch(d) {
         case 'UP': if(dir.y === 0) setDir({x:0, y:-1}); break;
         case 'DOWN': if(dir.y === 0) setDir({x:0, y:1}); break;
@@ -151,52 +153,83 @@ const SnakeGame: React.FC = () => {
         </div>
         
         {/* Game Area */}
-        <div 
-            className="relative bg-tech-panel border-2 border-tech-border mb-6"
-            style={{ width: GRID_SIZE * CELL_SIZE, height: GRID_SIZE * CELL_SIZE }}
-        >
-            {gameOver && (
-                <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-10">
-                    <h3 className="text-tech-alert font-bold text-xl uppercase tracking-widest mb-2">Failure</h3>
-                    <button onClick={resetGame} className="px-4 py-2 border border-tech-primary text-tech-primary hover:bg-tech-primary hover:text-black uppercase text-xs font-bold">Retry</button>
-                </div>
-            )}
-            {/* Snake */}
-            {snake.map((seg, i) => (
+        <div className="w-full aspect-square flex items-center justify-center mb-6 overflow-hidden">
+            <div 
+                className="relative bg-tech-panel border-2 border-tech-border origin-center touch-none"
+                style={{ 
+                    width: GRID_SIZE * CELL_SIZE, 
+                    height: GRID_SIZE * CELL_SIZE,
+                    transform: 'scale(min(1, 0.8))', // Basic scaling for smaller screens
+                    touchAction: 'none' // CRITICAL FOR IPAD: Prevents browser scrolling when swiping inside
+                }}
+            >
+                {gameOver && (
+                    <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-10">
+                        <h3 className="text-tech-alert font-bold text-xl uppercase tracking-widest mb-2">Failure</h3>
+                        <button onClick={resetGame} className="px-6 py-3 border border-tech-primary text-tech-primary hover:bg-tech-primary hover:text-black active:bg-tech-primary active:text-black uppercase text-sm font-bold">Retry</button>
+                    </div>
+                )}
+                {/* Snake */}
+                {snake.map((seg, i) => (
+                    <div 
+                        key={i}
+                        className="absolute bg-tech-primary"
+                        style={{
+                            left: seg.x * CELL_SIZE,
+                            top: seg.y * CELL_SIZE,
+                            width: CELL_SIZE - 2,
+                            height: CELL_SIZE - 2,
+                            opacity: i === 0 ? 1 : 0.5
+                        }}
+                    />
+                ))}
+                {/* Food */}
                 <div 
-                    key={i}
-                    className="absolute bg-tech-primary"
+                    className="absolute bg-tech-secondary animate-pulse"
                     style={{
-                        left: seg.x * CELL_SIZE,
-                        top: seg.y * CELL_SIZE,
+                        left: food.x * CELL_SIZE,
+                        top: food.y * CELL_SIZE,
                         width: CELL_SIZE - 2,
-                        height: CELL_SIZE - 2,
-                        opacity: i === 0 ? 1 : 0.5
+                        height: CELL_SIZE - 2
                     }}
                 />
-            ))}
-            {/* Food */}
-            <div 
-                className="absolute bg-tech-secondary animate-pulse"
-                style={{
-                    left: food.x * CELL_SIZE,
-                    top: food.y * CELL_SIZE,
-                    width: CELL_SIZE - 2,
-                    height: CELL_SIZE - 2
-                }}
-            />
+            </div>
         </div>
         
-        {/* Mobile Controls */}
-        <div className="grid grid-cols-3 gap-2 w-48">
+        {/* Mobile Controls - Enhanced tap targets */}
+        <div className="grid grid-cols-3 gap-3 w-56">
              <div></div>
-             <button onClick={() => handleTouchDir('UP')} className="w-14 h-14 bg-tech-panel border border-tech-border text-tech-primary active:bg-tech-primary active:text-black rounded">▲</button>
+             <button 
+                onMouseDown={(e) => handleTouchDir('UP', e)} 
+                onTouchStart={(e) => handleTouchDir('UP', e)}
+                className="h-16 bg-tech-panel border border-tech-border text-tech-primary active:bg-tech-primary active:text-black rounded text-2xl font-bold touch-manipulation"
+             >
+                ▲
+             </button>
              <div></div>
-             <button onClick={() => handleTouchDir('LEFT')} className="w-14 h-14 bg-tech-panel border border-tech-border text-tech-primary active:bg-tech-primary active:text-black rounded">◀</button>
-             <button onClick={() => handleTouchDir('DOWN')} className="w-14 h-14 bg-tech-panel border border-tech-border text-tech-primary active:bg-tech-primary active:text-black rounded">▼</button>
-             <button onClick={() => handleTouchDir('RIGHT')} className="w-14 h-14 bg-tech-panel border border-tech-border text-tech-primary active:bg-tech-primary active:text-black rounded">▶</button>
+             <button 
+                onMouseDown={(e) => handleTouchDir('LEFT', e)}
+                onTouchStart={(e) => handleTouchDir('LEFT', e)}
+                className="h-16 bg-tech-panel border border-tech-border text-tech-primary active:bg-tech-primary active:text-black rounded text-2xl font-bold touch-manipulation"
+             >
+                ◀
+             </button>
+             <button 
+                onMouseDown={(e) => handleTouchDir('DOWN', e)}
+                onTouchStart={(e) => handleTouchDir('DOWN', e)}
+                className="h-16 bg-tech-panel border border-tech-border text-tech-primary active:bg-tech-primary active:text-black rounded text-2xl font-bold touch-manipulation"
+             >
+                ▼
+             </button>
+             <button 
+                onMouseDown={(e) => handleTouchDir('RIGHT', e)}
+                onTouchStart={(e) => handleTouchDir('RIGHT', e)}
+                className="h-16 bg-tech-panel border border-tech-border text-tech-primary active:bg-tech-primary active:text-black rounded text-2xl font-bold touch-manipulation"
+             >
+                ▶
+             </button>
         </div>
-        <div className="mt-4 text-[10px] text-gray-500 uppercase tracking-widest hidden md:block">
+        <div className="mt-4 text-xs text-gray-500 uppercase tracking-widest hidden md:block">
             Keyboard or Pad to Navigate
         </div>
     </div>
@@ -304,10 +337,10 @@ const MemoryGame: React.FC = () => {
                     <button
                         key={i}
                         onClick={() => handlePress(i)}
-                        className={`w-24 h-24 border-2 transition-all duration-100 ${
+                        className={`w-28 h-28 border-2 transition-all duration-100 ${
                             flash === i 
                             ? `bg-[${colors[i]}] border-[${colors[i]}] shadow-[0_0_20px_${colors[i]}] scale-95`
-                            : 'bg-black border-gray-700 hover:border-gray-500'
+                            : 'bg-black border-gray-700 hover:border-gray-500 active:border-white'
                         }`}
                         style={{
                             backgroundColor: flash === i ? colors[i] : 'transparent',
@@ -320,7 +353,7 @@ const MemoryGame: React.FC = () => {
             <div className="text-center space-y-4">
                 <div className="text-tech-primary font-mono text-xs uppercase tracking-widest h-4">{msg}</div>
                 {sequence.length === 0 && (
-                    <button onClick={startGame} className="px-6 py-2 bg-tech-secondary text-black font-bold uppercase text-sm hover:bg-white transition-colors">
+                    <button onClick={startGame} className="px-6 py-3 bg-tech-secondary text-black font-bold uppercase text-sm hover:bg-white active:bg-white active:scale-95 transition-all">
                         Initialize
                     </button>
                 )}
@@ -407,21 +440,21 @@ const MorseGame: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-4 w-full max-w-[300px] mb-6">
-                <button onClick={() => handleInput('.')} className="h-20 bg-black border border-tech-primary text-tech-primary text-4xl hover:bg-tech-primary hover:text-black font-bold active:scale-95 transition-all">•</button>
-                <button onClick={() => handleInput('-')} className="h-20 bg-black border border-tech-primary text-tech-primary text-4xl hover:bg-tech-primary hover:text-black font-bold active:scale-95 transition-all">—</button>
+                <button onClick={() => handleInput('.')} className="h-24 bg-black border border-tech-primary text-tech-primary text-5xl hover:bg-tech-primary hover:text-black active:bg-tech-primary active:text-black font-bold active:scale-95 transition-all rounded">•</button>
+                <button onClick={() => handleInput('-')} className="h-24 bg-black border border-tech-primary text-tech-primary text-5xl hover:bg-tech-primary hover:text-black active:bg-tech-primary active:text-black font-bold active:scale-95 transition-all rounded">—</button>
             </div>
 
             <div className="flex space-x-4 w-full max-w-[300px]">
-                <button onClick={() => setInput('')} className="flex-1 py-3 border border-gray-600 text-gray-500 hover:border-gray-400 text-xs uppercase tracking-widest">CLR</button>
-                <button onClick={checkAnswer} className="flex-[2] py-3 bg-tech-warning text-black font-bold uppercase tracking-widest hover:bg-white">Transmit</button>
+                <button onClick={() => setInput('')} className="flex-1 py-4 border border-gray-600 text-gray-500 hover:border-gray-400 active:bg-gray-800 text-xs uppercase tracking-widest">CLR</button>
+                <button onClick={checkAnswer} className="flex-[2] py-4 bg-tech-warning text-black font-bold uppercase tracking-widest hover:bg-white active:bg-white active:scale-95">Transmit</button>
             </div>
 
-            <button onClick={() => setShowCheat(!showCheat)} className="mt-6 text-xs text-gray-600 underline decoration-dotted uppercase">
+            <button onClick={() => setShowCheat(!showCheat)} className="mt-6 text-xs text-gray-600 underline decoration-dotted uppercase p-2">
                 {showCheat ? 'Hide Cipher' : 'Show Cipher'}
             </button>
             
             {showCheat && (
-                <div className="mt-4 grid grid-cols-6 gap-2 text-[10px] font-mono text-gray-500 w-full">
+                <div className="mt-4 grid grid-cols-6 gap-2 text-xs font-mono text-gray-500 w-full">
                     {keys.map(k => (
                         <div key={k} className={k === target ? 'text-tech-primary font-bold' : ''}>{k} {MORSE_CODE[k]}</div>
                     ))}
@@ -447,19 +480,19 @@ const Simulation: React.FC = () => {
             <div className="flex flex-wrap justify-center gap-2">
                 <button 
                     onClick={() => setMode('snake')} 
-                    className={`px-3 py-1 text-xs uppercase font-bold border transition-colors ${mode === 'snake' ? 'bg-tech-primary text-black border-tech-primary' : 'text-gray-500 border-gray-700 hover:border-gray-500'}`}
+                    className={`px-4 py-2 text-xs uppercase font-bold border transition-colors ${mode === 'snake' ? 'bg-tech-primary text-black border-tech-primary' : 'text-gray-500 border-gray-700 hover:border-gray-500'}`}
                 >
                     Reflex
                 </button>
                 <button 
                     onClick={() => setMode('memory')} 
-                    className={`px-3 py-1 text-xs uppercase font-bold border transition-colors ${mode === 'memory' ? 'bg-tech-secondary text-black border-tech-secondary' : 'text-gray-500 border-gray-700 hover:border-gray-500'}`}
+                    className={`px-4 py-2 text-xs uppercase font-bold border transition-colors ${mode === 'memory' ? 'bg-tech-secondary text-black border-tech-secondary' : 'text-gray-500 border-gray-700 hover:border-gray-500'}`}
                 >
                     Cognition
                 </button>
                 <button 
                     onClick={() => setMode('morse')} 
-                    className={`px-3 py-1 text-xs uppercase font-bold border transition-colors ${mode === 'morse' ? 'bg-tech-warning text-black border-tech-warning' : 'text-gray-500 border-gray-700 hover:border-gray-500'}`}
+                    className={`px-4 py-2 text-xs uppercase font-bold border transition-colors ${mode === 'morse' ? 'bg-tech-warning text-black border-tech-warning' : 'text-gray-500 border-gray-700 hover:border-gray-500'}`}
                 >
                     Signals
                 </button>

@@ -187,17 +187,17 @@ Dry goods can last 20+ years if stored correctly.
             <div key={idx} className="bg-tech-panel border border-tech-border overflow-hidden hover:border-tech-primary transition-colors group">
                 <div className="bg-black px-4 py-3 border-b border-tech-border flex justify-between items-center group-hover:bg-tech-dim transition-colors">
                 <h3 className="font-bold text-gray-200 uppercase tracking-wider text-sm">{cat.title}</h3>
-                <span className="text-[10px] text-gray-600 font-mono border border-gray-800 px-1">{cat.id}</span>
+                <span className="text-xs text-gray-600 font-mono border border-gray-800 px-1">{cat.id}</span>
                 </div>
                 <div className="p-4">
                 <ul className="space-y-4">
                     {cat.links.map((link, lIdx) => (
-                    <li key={lIdx} onClick={() => setSelectedGuide({ title: link.title, desc: link.desc, content: link.content })} className="group/item cursor-pointer">
+                    <li key={lIdx} onClick={() => setSelectedGuide({ title: link.title, desc: link.desc, content: link.content })} className="group/item cursor-pointer active:opacity-70">
                         <div className="flex items-start space-x-3">
                         <span className="text-tech-primary mt-1 text-xs">>></span>
                         <div>
                             <h4 className="text-gray-300 font-bold uppercase text-sm group-hover/item:text-tech-primary transition-colors border-b border-transparent group-hover/item:border-tech-primary inline-block">{link.title}</h4>
-                            <p className="text-[10px] text-gray-500 mt-1 font-mono tracking-wide">{link.desc}</p>
+                            <p className="text-xs text-gray-500 mt-1 font-mono tracking-wide">{link.desc}</p>
                         </div>
                         </div>
                     </li>
@@ -212,13 +212,13 @@ Dry goods can last 20+ years if stored correctly.
               {navigator.onLine ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {onlineResources.map((res, idx) => (
-                        <a key={idx} href={res.url} target="_blank" rel="noopener noreferrer" className="bg-tech-panel border border-tech-border p-6 hover:border-tech-secondary hover:bg-tech-secondary/10 transition-all group block">
+                        <a key={idx} href={res.url} target="_blank" rel="noopener noreferrer" className="bg-tech-panel border border-tech-border p-6 hover:border-tech-secondary hover:bg-tech-secondary/10 transition-all group block active:scale-95">
                              <div className="flex justify-between items-start">
                                  <h3 className="text-lg font-bold text-tech-secondary uppercase tracking-widest group-hover:underline decoration-dotted">{res.title}</h3>
                                  <span className="text-xs text-black bg-tech-secondary px-2 py-1 font-bold">EXT</span>
                              </div>
                              <p className="text-gray-400 font-mono text-sm mt-2">{res.desc}</p>
-                             <div className="mt-4 text-[10px] text-gray-600 uppercase">Status: <span className="text-tech-primary">ONLINE</span></div>
+                             <div className="mt-4 text-xs text-gray-600 uppercase">Status: <span className="text-tech-primary">ONLINE</span></div>
                         </a>
                     ))}
                      <div className="col-span-1 md:col-span-2 bg-black border border-tech-warning p-4 text-center">
@@ -244,7 +244,7 @@ Dry goods can last 20+ years if stored correctly.
                   <div className="p-4 border-b border-tech-border flex justify-between items-center bg-black">
                       <div>
                           <h2 className="text-xl font-bold text-tech-primary uppercase tracking-[0.2em]">{selectedGuide.title}</h2>
-                          <p className="text-[10px] text-gray-500 font-mono">{selectedGuide.desc}</p>
+                          <p className="text-xs text-gray-500 font-mono">{selectedGuide.desc}</p>
                       </div>
                       <button onClick={() => setSelectedGuide(null)} className="text-tech-alert hover:text-white border border-tech-alert hover:bg-tech-alert px-3 py-1 uppercase text-xs font-bold transition-colors">
                           Close
@@ -253,7 +253,7 @@ Dry goods can last 20+ years if stored correctly.
                   <div className="p-6 overflow-y-auto custom-scrollbar font-mono text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
                       <ReactMarkdown>{selectedGuide.content}</ReactMarkdown>
                   </div>
-                  <div className="p-2 bg-black border-t border-tech-border text-center text-[10px] text-gray-600 uppercase tracking-widest">
+                  <div className="p-2 bg-black border-t border-tech-border text-center text-xs text-gray-600 uppercase tracking-widest">
                       End of File
                   </div>
               </div>

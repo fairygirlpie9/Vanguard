@@ -82,59 +82,59 @@ const Dashboard: React.FC<DashboardProps> = ({ items, onSimulateDay }) => {
          <div className="p-4 bg-black/50 border-b border-tech-border flex justify-between items-center">
              <div className="flex items-center space-x-2">
                  <span className="text-xl">📡</span>
-                 <h3 className="text-tech-secondary font-bold uppercase tracking-[0.2em]">External Environmental Sensors</h3>
+                 <h3 className="text-tech-secondary font-bold uppercase tracking-[0.2em] text-sm">External Environmental Sensors</h3>
              </div>
-             <span className="text-[10px] text-tech-primary animate-pulse">● LIVE DATA FEED</span>
+             <span className="text-xs text-tech-primary animate-pulse">● LIVE DATA FEED</span>
          </div>
          <div className="p-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
              {/* FLOOD */}
              <div className="border border-gray-800 p-4 bg-black/40 hover:border-tech-secondary transition-colors">
-                 <div className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Flood Risk</div>
+                 <div className="text-xs text-gray-500 uppercase tracking-widest mb-1">Flood Risk</div>
                  {envData ? (
                      <>
                         <div className={`text-4xl font-bold font-mono my-2 ${envData.floodWarnings > 0 ? 'text-tech-alert animate-pulse' : 'text-gray-400'}`}>
                             {envData.floodWarnings}
                         </div>
-                        <div className="text-[9px] text-gray-500">ACTIVE ALERTS</div>
+                        <div className="text-xs text-gray-500">ACTIVE ALERTS</div>
                      </>
                  ) : <span className="text-gray-600 text-xs animate-pulse">INITIALIZING...</span>}
              </div>
 
              {/* SOLAR */}
              <div className="border border-gray-800 p-4 bg-black/40 hover:border-tech-secondary transition-colors">
-                 <div className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Solar Potential</div>
+                 <div className="text-xs text-gray-500 uppercase tracking-widest mb-1">Solar Potential</div>
                  {envData ? (
                      <>
                         <div className="text-4xl font-bold font-mono my-2 text-tech-warning">
                             {envData.solarRadiation}
                         </div>
-                        <div className="text-[9px] text-gray-500">WATTS / M²</div>
+                        <div className="text-xs text-gray-500">WATTS / M²</div>
                      </>
                  ) : <span className="text-gray-600 text-xs animate-pulse">INITIALIZING...</span>}
              </div>
 
              {/* CLOUD */}
              <div className="border border-gray-800 p-4 bg-black/40 hover:border-tech-secondary transition-colors">
-                 <div className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Visibility / Cloud</div>
+                 <div className="text-xs text-gray-500 uppercase tracking-widest mb-1">Visibility / Cloud</div>
                  {envData ? (
                      <>
                         <div className={`text-4xl font-bold font-mono my-2 ${envData.cloudCover > 80 ? 'text-gray-500' : 'text-tech-secondary'}`}>
                             {envData.cloudCover}%
                         </div>
-                        <div className="text-[9px] text-gray-500">SKY COVERAGE</div>
+                        <div className="text-xs text-gray-500">SKY COVERAGE</div>
                      </>
                  ) : <span className="text-gray-600 text-xs animate-pulse">INITIALIZING...</span>}
              </div>
 
              {/* SEISMIC */}
              <div className="border border-gray-800 p-4 bg-black/40 hover:border-tech-secondary transition-colors">
-                 <div className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Seismic (1H)</div>
+                 <div className="text-xs text-gray-500 uppercase tracking-widest mb-1">Seismic (1H)</div>
                  {envData ? (
                      <>
                         <div className={`text-4xl font-bold font-mono my-2 ${envData.maxSeismicMag > 4 ? 'text-tech-alert' : 'text-tech-primary'}`}>
                             {envData.maxSeismicMag.toFixed(1)}
                         </div>
-                        <div className="text-[9px] text-gray-500">MAX MAGNITUDE</div>
+                        <div className="text-xs text-gray-500">MAX MAGNITUDE</div>
                      </>
                  ) : <span className="text-gray-600 text-xs animate-pulse">INITIALIZING...</span>}
              </div>
@@ -184,7 +184,7 @@ const Dashboard: React.FC<DashboardProps> = ({ items, onSimulateDay }) => {
             <ResponsiveContainer width="100%" height="100%">
                 <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
                 <PolarGrid stroke="#333" />
-                <PolarAngleAxis dataKey="subject" tick={{ fill: '#666', fontSize: 10, fontFamily: 'Share Tech Mono' }} />
+                <PolarAngleAxis dataKey="subject" tick={{ fill: '#666', fontSize: 12, fontFamily: 'Share Tech Mono' }} />
                 <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                 <Radar
                     name="Readiness"
@@ -207,16 +207,16 @@ const Dashboard: React.FC<DashboardProps> = ({ items, onSimulateDay }) => {
          <div className="bg-tech-panel p-6 border border-tech-border relative overflow-hidden flex flex-col justify-between">
            <h3 className="text-gray-500 text-xs uppercase tracking-[0.2em] mb-4 border-b border-gray-800 w-full pb-2">Manual Ration Control</h3>
            <div className="flex-1 flex flex-col justify-center">
-             <p className="text-[10px] text-gray-500 font-mono mb-4 leading-tight text-center">
+             <p className="text-xs text-gray-500 font-mono mb-4 leading-tight text-center">
                  MANUAL OVERRIDE: Log daily consumption to update supply levels based on crew manifest requirements.
              </p>
              <button 
                   onClick={onSimulateDay}
-                  className="w-full py-3 border border-tech-warning text-tech-warning font-bold uppercase tracking-widest hover:bg-tech-warning hover:text-black transition-all active:scale-95 text-xs"
+                  className="w-full py-4 border border-tech-warning text-tech-warning font-bold uppercase tracking-widest hover:bg-tech-warning hover:text-black active:bg-tech-warning active:text-black transition-all active:scale-95 text-xs"
               >
                   Log Daily Usage [-1 Day]
              </button>
-             <div className="mt-2 text-center text-[9px] text-gray-600 uppercase">
+             <div className="mt-2 text-center text-xs text-gray-600 uppercase">
                  Deducts: Water / Rations / Meds
              </div>
            </div>
@@ -226,7 +226,7 @@ const Dashboard: React.FC<DashboardProps> = ({ items, onSimulateDay }) => {
       {/* Main Status Feed / Timeline */}
       <div className="bg-tech-panel border border-tech-border p-6 relative">
         <div className="absolute top-0 left-0 w-2 h-full bg-black border-r border-tech-border"></div>
-        <h3 className="text-tech-secondary font-bold uppercase tracking-[0.2em] mb-6 pl-4">Operation Timeline</h3>
+        <h3 className="text-tech-secondary font-bold uppercase tracking-[0.2em] mb-6 pl-4 text-sm">Operation Timeline</h3>
         <div className="space-y-6 relative ml-4">
            {/* Timeline line */}
            <div className="absolute left-[7px] top-2 bottom-0 w-[1px] bg-gray-800"></div>

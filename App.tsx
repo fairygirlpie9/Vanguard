@@ -169,12 +169,12 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-black text-slate-200 overflow-hidden font-sans relative">
+    <div className="flex h-[100dvh] bg-black text-slate-200 overflow-hidden font-sans relative">
       {/* Mobile Sidebar Toggle */}
       <div className="md:hidden fixed top-4 left-4 z-50">
         <button 
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="bg-black/80 p-2 text-tech-primary border border-tech-primary shadow-[0_0_10px_#00ff41]"
+          className="bg-black/90 p-3 text-tech-primary border border-tech-primary shadow-[0_0_10px_#00ff41] active:bg-tech-primary active:text-black transition-colors"
         >
           {isSidebarOpen ? '✖' : '☰'}
         </button>
@@ -184,7 +184,7 @@ const App: React.FC = () => {
       <div className={`
         fixed inset-y-0 left-0 z-40 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        w-64 md:w-auto
+        w-72 md:w-auto
       `}>
         <Sidebar currentView={currentView} setView={(view) => { setCurrentView(view); setIsSidebarOpen(false); }} />
       </div>
@@ -193,7 +193,7 @@ const App: React.FC = () => {
       <main className="flex-1 overflow-hidden relative w-full bg-grid-pattern bg-[length:40px_40px]">
          {/* Top Bar Decoration */}
          <div className="absolute top-0 left-0 w-full h-16 border-b border-tech-border bg-black/80 backdrop-blur-sm z-10 flex items-center justify-end px-6">
-            <div className="text-xs font-mono text-gray-500 flex space-x-6">
+            <div className="text-xs md:text-sm font-mono text-gray-500 flex space-x-6">
                <span className="text-tech-secondary font-bold tracking-widest">{utcTime}</span>
                <span className="hidden md:inline text-tech-primary">v2.4.2-BETA</span>
             </div>
@@ -209,7 +209,8 @@ const App: React.FC = () => {
          </div>
          
          <div className="h-full overflow-y-auto p-4 md:p-8 pt-20 md:pt-24 scroll-smooth">
-            <div className="max-w-7xl mx-auto h-full pb-20">
+            {/* Changed h-full to min-h-full to prevent clipping on mobile when content overflows */}
+            <div className="max-w-7xl mx-auto min-h-full pb-20">
               {renderView()}
             </div>
          </div>

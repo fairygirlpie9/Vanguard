@@ -45,6 +45,11 @@ const Locator: React.FC = () => {
 
         markersGroupRef.current = L.layerGroup().addTo(mapRef.current);
     }
+    
+    // Resize map when component mounts/updates to handle flex container changes
+    setTimeout(() => {
+        mapRef.current?.invalidateSize();
+    }, 100);
 
     return () => {
         if (mapRef.current) {
@@ -147,7 +152,7 @@ const Locator: React.FC = () => {
       if (markersGroupRef.current) {
           markersGroupRef.current.clearLayers();
           
-          let bounds = [];
+          let bounds: any[] = [];
           
           chunks.forEach(chunk => {
               if (chunk.maps?.title) {
@@ -186,7 +191,7 @@ const Locator: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col space-y-6 font-tech">
-      <div className="bg-tech-panel p-6 border border-tech-border relative overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+      <div className="bg-tech-panel p-6 border border-tech-border relative overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.5)] shrink-0">
         <div className="absolute top-0 right-0 p-4 opacity-10 text-6xl text-tech-primary">⌖</div>
         <h2 className="text-xl font-bold mb-2 text-tech-primary uppercase tracking-widest crt-glow">Tactical Intel Map</h2>
         <p className="text-xs text-gray-500 mb-6 font-mono border-b border-gray-800 pb-2">UPLINK: GEMINI-2.5-FLASH // GROUNDING: GOOGLE MAPS ACTIVE</p>
@@ -239,10 +244,10 @@ const Locator: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-[500px]">
-        {/* Map Display */}
-        <div className="lg:col-span-2 relative border border-tech-border bg-black group overflow-hidden">
-            <div id={mapContainerId} className="w-full h-full z-0" style={{ minHeight: '500px' }}></div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
+        {/* Map Display - Ensure container fills available height */}
+        <div className="lg:col-span-2 relative border border-tech-border bg-black group overflow-hidden h-[400px] lg:h-auto min-h-[400px]">
+            <div id={mapContainerId} className="w-full h-full z-0"></div>
             
             {/* Map Overlay Decorations */}
             <div className="absolute top-4 left-4 z-10 pointer-events-none">
@@ -270,8 +275,8 @@ const Locator: React.FC = () => {
         </div>
 
         {/* Results / Briefing Panel */}
-        <div className="bg-tech-panel border border-tech-border flex flex-col h-full overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-            <div className="p-4 bg-black border-b border-tech-border flex justify-between items-center">
+        <div className="bg-tech-panel border border-tech-border flex flex-col h-[400px] lg:h-auto overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+            <div className="p-4 bg-black border-b border-tech-border flex justify-between items-center shrink-0">
                 <h3 className="text-tech-secondary font-bold uppercase tracking-widest text-sm">Strategic Intelligence</h3>
                 <div className="w-2 h-2 bg-tech-secondary rounded-full animate-pulse"></div>
             </div>

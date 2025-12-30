@@ -74,10 +74,10 @@ const Tools: React.FC = () => {
                     <p className="text-xs text-gray-500 text-center">VISUAL SOS SIGNAL (SCREEN FLASH)</p>
                     <button 
                         onClick={() => setSosActive(!sosActive)}
-                        className={`w-32 h-32 rounded-full border-4 flex items-center justify-center transition-all ${
+                        className={`w-32 h-32 rounded-full border-4 flex items-center justify-center transition-all active:scale-95 ${
                             sosActive 
                             ? 'bg-white text-black border-white animate-pulse shadow-[0_0_50px_white]' 
-                            : 'bg-black text-tech-alert border-tech-alert hover:bg-tech-alert hover:text-black'
+                            : 'bg-black text-tech-alert border-tech-alert hover:bg-tech-alert hover:text-black active:bg-tech-alert active:text-black'
                         }`}
                     >
                         <span className="text-2xl font-bold tracking-widest">{sosActive ? 'STOP' : 'SOS'}</span>
@@ -93,7 +93,7 @@ const Tools: React.FC = () => {
                             <select 
                                 value={converterType}
                                 onChange={(e) => setConverterType(e.target.value)}
-                                className="bg-black border border-tech-border text-tech-primary p-2 text-sm uppercase flex-1 outline-none"
+                                className="bg-black border border-tech-border text-tech-primary p-3 text-sm uppercase flex-1 outline-none"
                             >
                                 <option value="c_to_f">Celsius → Fahr</option>
                                 <option value="f_to_c">Fahr → Celsius</option>
@@ -109,10 +109,10 @@ const Tools: React.FC = () => {
                                 value={converterVal}
                                 onChange={(e) => setConverterVal(e.target.value)}
                                 placeholder="VALUE"
-                                className="bg-black border border-tech-border p-2 text-white w-24 outline-none font-mono"
+                                className="bg-black border border-tech-border p-3 text-white w-24 outline-none font-mono text-sm"
                             />
                             <span className="text-tech-primary">➜</span>
-                            <div className="flex-1 bg-black border border-tech-border p-2 text-right font-mono text-tech-secondary">
+                            <div className="flex-1 bg-black border border-tech-border p-3 text-right font-mono text-tech-secondary text-sm">
                                 {convert(converterVal, converterType)}
                             </div>
                         </div>
@@ -125,13 +125,13 @@ const Tools: React.FC = () => {
                 <h3 className="text-gray-200 uppercase tracking-widest font-bold border-b border-gray-700 pb-4 mb-4">Morse Code Reference</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-mono text-gray-400">
                     {['A .-','B -...','C -.-.','D -..','E .','F ..-.','G --.','H ....','I ..','J .---','K -.-','L .-..','M --'].map(x => (
-                        <div key={x} className="border border-gray-800 p-2 text-center hover:text-tech-primary hover:border-tech-primary transition-colors cursor-default">{x}</div>
+                        <div key={x} className="border border-gray-800 p-2 text-center hover:text-tech-primary hover:border-tech-primary transition-colors cursor-default text-sm">{x}</div>
                     ))}
                     {['N -.','O ---','P .--.','Q --.-','R .-.','S ...','T -','U ..-','V ...-','W .--','X -..-','Y -.--','Z --..'].map(x => (
-                        <div key={x} className="border border-gray-800 p-2 text-center hover:text-tech-primary hover:border-tech-primary transition-colors cursor-default">{x}</div>
+                        <div key={x} className="border border-gray-800 p-2 text-center hover:text-tech-primary hover:border-tech-primary transition-colors cursor-default text-sm">{x}</div>
                     ))}
                     {['SOS ... --- ...'].map(x => (
-                        <div key={x} className="col-span-2 border border-tech-alert text-tech-alert p-2 text-center font-bold animate-pulse">{x}</div>
+                        <div key={x} className="col-span-2 border border-tech-alert text-tech-alert p-2 text-center font-bold animate-pulse text-sm">{x}</div>
                     ))}
                 </div>
             </div>
@@ -142,24 +142,24 @@ const Tools: React.FC = () => {
           <div className="bg-tech-panel border border-tech-border p-6">
               <h3 className="text-gray-200 uppercase tracking-widest font-bold border-b border-gray-700 pb-4 mb-4">Emergency Phrasebook</h3>
               <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
+                <table className="w-full text-left border-collapse min-w-[600px]">
                     <thead>
                         <tr className="border-b border-gray-700 text-xs text-gray-500 font-mono uppercase">
-                            <th className="p-2 text-tech-primary">English</th>
-                            <th className="p-2">Spanish</th>
-                            <th className="p-2">French</th>
-                            <th className="p-2">German</th>
-                            <th className="p-2">Mandarin</th>
+                            <th className="p-3 text-tech-primary">English</th>
+                            <th className="p-3">Spanish</th>
+                            <th className="p-3">French</th>
+                            <th className="p-3">German</th>
+                            <th className="p-3">Mandarin</th>
                         </tr>
                     </thead>
                     <tbody className="text-sm font-mono text-gray-300">
                         {phrases.map((p, idx) => (
                             <tr key={idx} className="border-b border-gray-800 hover:bg-white/5 transition-colors">
-                                <td className="p-3 font-bold text-tech-primary">{p.key}</td>
-                                <td className="p-3">{p.sp}</td>
-                                <td className="p-3">{p.fr}</td>
-                                <td className="p-3">{p.de}</td>
-                                <td className="p-3">{p.cn}</td>
+                                <td className="p-4 font-bold text-tech-primary">{p.key}</td>
+                                <td className="p-4">{p.sp}</td>
+                                <td className="p-4">{p.fr}</td>
+                                <td className="p-4">{p.de}</td>
+                                <td className="p-4">{p.cn}</td>
                             </tr>
                         ))}
                     </tbody>
